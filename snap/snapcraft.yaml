@@ -11,10 +11,23 @@ confinement: strict
 environment:
   LD_LIBRARY_PATH:
     "${SNAP}/usr/local/lib/${SNAPCRAFT_ARCH_TRIPLET}\
+     :${SNAP}/graphics/lib\
      :${SNAP_LIBRARY_PATH}\
      :${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}\
      :${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/blas\
      :${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/lapack"
+  LIBGL_DRIVERS_PATH: ${SNAP}/graphics/dri
+  __EGL_VENDOR_LIBRARY_DIRS: ${SNAP}/graphics/glvnd/egl_vendor.d
+  __EGL_EXTERNAL_PLATFORM_CONFIG_DIRS: ${SNAP}/usr/share/egl/egl_external_platform.d
+  XKB_CONFIG_ROOT: ${SNAP}/usr/share/X11/xkb
+
+layout:
+  /usr/share/icons:
+    bind: $SNAP/usr/share/icons
+  /usr/share/libdrm:  # Needed by mesa-core22 on ARM GPUs
+    bind: $SNAP/graphics/libdrm
+  /usr/share/drirc.d:
+    bind: $SNAP/graphics/drirc.d
 
 apps:
   daemon:
@@ -33,6 +46,11 @@ apps:
 plugs:
   wayland:
   network-bind:
+  graphics-core22:
+    interface: content
+    target: $SNAP/graphics
+    default-provider: mesa-core22
+  opengl:
 
 parts:
   mir-kiosk-snap-launch:
@@ -98,3 +116,16 @@ parts:
     - libpixman-1-0
     - libwayland-client0
     - libxkbcommon0
+
+  cleanup:
+    after: [neatvnc, wayvnc]
+    plugin: nil
+    build-snaps: [ mesa-core22 ]
+    override-prime: |
+      set -eux
+      cd /snap/mesa-core22/current/egl/lib
+      find . -type f,l -exec rm -f $SNAPCRAFT_PRIME/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/{} \;
+      rm -fr "$SNAPCRAFT_PRIME/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/dri"
+      for CRUFT in bug doc doc-base drirc.d glvnd libdrm lintian man pkgconfig; do
+        rm -rf "$SNAPCRAFT_PRIME/usr/share/$CRUFT"
+      done
