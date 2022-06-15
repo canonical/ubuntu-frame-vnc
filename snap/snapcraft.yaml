@@ -1,0 +1,100 @@
+name: ubuntu-frame-vnc
+base: core22
+adopt-info: wayvnc
+summary: This is a VNC server for Ubuntu Frame
+description: |
+  This allows for remote access to a running Ubuntu Frame instance.
+
+grade: devel
+confinement: strict
+
+environment:
+  LD_LIBRARY_PATH:
+    "${SNAP}/usr/local/lib/${SNAPCRAFT_ARCH_TRIPLET}\
+     :${SNAP_LIBRARY_PATH}\
+     :${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}\
+     :${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/blas\
+     :${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/lapack"
+
+apps:
+  daemon:
+    daemon: simple
+    restart-condition: always
+    command-chain:
+    - bin/run-daemon
+    - bin/wayland-launch
+    command: usr/local/bin/wayvnc
+
+  ubuntu-frame-vnc:
+    command-chain:
+    - bin/wayland-launch
+    command: usr/local/bin/wayvnc
+
+plugs:
+  wayland:
+  network-bind:
+
+parts:
+  mir-kiosk-snap-launch:
+    plugin: dump
+    source: https://github.com/MirServer/mir-kiosk-snap-launch.git
+    override-build: |
+      ${SNAPCRAFT_PART_BUILD}/build-with-plugs.sh wayland
+    stage-packages:
+    - inotify-tools
+
+  aml:
+    plugin: nil
+    source: https://github.com/any1/aml.git
+
+  neatvnc:
+    plugin: nil
+    source: https://github.com/any1/neatvnc.git
+    build-packages:
+    - gnutls-dev
+    - libdrm-dev
+    - libgbm-dev
+    - libavcodec-dev
+    - libavfilter-dev
+    - libavutil-dev
+    - libturbojpeg0-dev
+    - zlib1g-dev
+    stage-packages:
+    - libdrm2
+    - libgbm1
+    - libgnutls30
+    - libavcodec58
+    - libavfilter7
+    - libavutil56
+    - libturbojpeg
+    - zlib1g
+
+  wayvnc:
+    after: [aml, neatvnc]
+    source: https://github.com/any1/wayvnc.git
+    override-pull: |
+      craftctl default
+      craftctl set version="$( git describe --tags )"
+      mkdir subprojects
+      ln -s ../../../aml/src subprojects/aml
+      ln -s ../../../neatvnc/src subprojects/neatvnc
+    build-packages:
+    - libdrm-dev
+    - libgbm-dev
+    - libpam0g-dev
+    - libpixman-1-dev
+    - libwayland-dev
+    - libxkbcommon-dev
+    - meson
+    - pkg-config
+    plugin: meson
+    meson-parameters:
+    - -Dscreencopy-dmabuf=enabled
+    - -Dneatvnc:h264=enabled
+    stage-packages:
+    - libdrm2
+    - libgbm1
+    - libpam0g
+    - libpixman-1-0
+    - libwayland-client0
+    - libxkbcommon0
