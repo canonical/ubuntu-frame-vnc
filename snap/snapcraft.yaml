@@ -1,5 +1,5 @@
 name: ubuntu-frame-vnc
-base: core22
+base: core20
 adopt-info: wayvnc
 summary: This is a VNC server for Ubuntu Frame
 description: |
@@ -24,7 +24,7 @@ environment:
 layout:
   /usr/share/icons:
     bind: $SNAP/usr/share/icons
-  /usr/share/libdrm:  # Needed by mesa-core22 on ARM GPUs
+  /usr/share/libdrm:  # Needed by mesa-core20 on ARM GPUs
     bind: $SNAP/graphics/libdrm
   /usr/share/drirc.d:
     bind: $SNAP/graphics/drirc.d
@@ -46,10 +46,10 @@ apps:
 plugs:
   wayland:
   network-bind:
-  graphics-core22:
+  graphics-core20:
     interface: content
     target: $SNAP/graphics
-    default-provider: mesa-core22
+    default-provider: mesa-core20
   opengl:
 
 parts:
@@ -72,27 +72,37 @@ parts:
     - gnutls-dev
     - libdrm-dev
     - libgbm-dev
-    - libavcodec-dev
-    - libavfilter-dev
-    - libavutil-dev
     - libturbojpeg0-dev
     - zlib1g-dev
     stage-packages:
     - libdrm2
     - libgbm1
     - libgnutls30
-    - libavcodec58
-    - libavfilter7
-    - libavutil56
     - libturbojpeg
     - zlib1g
 
+  xkbcommon:
+    source: https://github.com/xkbcommon/libxkbcommon.git
+    source-tag: xkbcommon-1.4.1
+    source-depth: 1
+    build-packages:
+    - bison
+    - libxcb-xkb-dev
+    - libxml2-dev
+    - wayland-protocols
+    stage-packages:
+    - libxcb-xkb1
+    - libxml2
+    plugin: meson
+    meson-parameters:
+    - -Denable-docs=false
+
   wayvnc:
-    after: [aml, neatvnc]
+    after: [aml, neatvnc, xkbcommon]
     source: https://github.com/any1/wayvnc.git
     override-pull: |
-      craftctl default
-      craftctl set version="$( git describe --tags )"
+      snapcraftctl pull
+      snapcraftctl set-version "$( git describe --tags )"
       mkdir subprojects
       ln -s ../../../aml/src subprojects/aml
       ln -s ../../../neatvnc/src subprojects/neatvnc
@@ -102,28 +112,25 @@ parts:
     - libpam0g-dev
     - libpixman-1-dev
     - libwayland-dev
-    - libxkbcommon-dev
     - meson
     - pkg-config
     plugin: meson
     meson-parameters:
     - -Dscreencopy-dmabuf=enabled
-    - -Dneatvnc:h264=enabled
     stage-packages:
     - libdrm2
     - libgbm1
     - libpam0g
     - libpixman-1-0
     - libwayland-client0
-    - libxkbcommon0
 
   cleanup:
     after: [neatvnc, wayvnc]
     plugin: nil
-    build-snaps: [ mesa-core22 ]
+    build-snaps: [ mesa-core20 ]
     override-prime: |
       set -eux
-      cd /snap/mesa-core22/current/egl/lib
+      cd /snap/mesa-core20/current/egl/lib
       find . -type f,l -exec rm -f $SNAPCRAFT_PRIME/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/{} \;
       rm -fr "$SNAPCRAFT_PRIME/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/dri"
       for CRUFT in bug doc doc-base drirc.d glvnd libdrm lintian man pkgconfig; do
