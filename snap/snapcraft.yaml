@@ -56,6 +56,7 @@ parts:
   mir-kiosk-snap-launch:
     plugin: dump
     source: https://github.com/MirServer/mir-kiosk-snap-launch.git
+    source-depth: 1
     override-build: |
       ${SNAPCRAFT_PART_BUILD}/build-with-plugs.sh wayland
     stage-packages:
@@ -64,10 +65,12 @@ parts:
   aml:
     plugin: nil
     source: https://github.com/any1/aml.git
+    source-depth: 1
 
   neatvnc:
     plugin: nil
     source: https://github.com/any1/neatvnc.git
+    source-depth: 1
     build-packages:
     - gnutls-dev
     - libdrm-dev
