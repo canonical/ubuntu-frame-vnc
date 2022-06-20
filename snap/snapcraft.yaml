@@ -10,7 +10,8 @@ confinement: strict
 
 environment:
   LD_LIBRARY_PATH:
-    "${SNAP}/usr/local/lib/${SNAPCRAFT_ARCH_TRIPLET}\
+    "${SNAP}/usr/local/lib\
+     :${SNAP}/usr/local/lib/${SNAPCRAFT_ARCH_TRIPLET}\
      :${SNAP}/graphics/lib\
      :${SNAP_LIBRARY_PATH}\
      :${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}\
@@ -67,7 +68,51 @@ parts:
     source: https://github.com/any1/aml.git
     source-depth: 1
 
+  ffmpeg:
+    source: https://git.ffmpeg.org/ffmpeg.git
+    source-tag: n5.0.1
+    source-depth: 1
+    build-packages:
+    - libdrm-dev
+    - libx264-dev
+    - libva-dev
+    - nasm
+    plugin: autotools
+    autotools-configure-parameters:
+    - --enable-gpl
+    - --disable-programs
+    - --disable-doc
+    - --disable-static
+    - --enable-shared
+    - --disable-avdevice
+    - --disable-avformat
+    - --disable-postproc
+    - --disable-swresample
+    - --disable-swscale
+    - --disable-everything
+    - --disable-iconv
+    - --disable-libxcb
+    - --disable-zlib
+    - --enable-libx264
+    - --enable-encoder=libx264
+    - --enable-libdrm
+    - --enable-vaapi
+    override-build: |
+      snapcraftctl build
+      sed -i 's@libdir=/usr/local/@libdir=${prefix}/@' ${SNAPCRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavcodec.pc
+      sed -i 's@libdir=/usr/local/@libdir=${prefix}/@' ${SNAPCRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavfilter.pc
+      sed -i 's@libdir=/usr/local/@libdir=${prefix}/@' ${SNAPCRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavutil.pc
+      sed -i 's@includedir=/usr/local/@includedir=${prefix}/@' ${SNAPCRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavcodec.pc
+      sed -i 's@includedir=/usr/local/@includedir=${prefix}/@' ${SNAPCRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavfilter.pc
+      sed -i 's@includedir=/usr/local/@includedir=${prefix}/@' ${SNAPCRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavutil.pc
+    stage-packages:
+    - libdrm2
+    - libx264-155
+    - libva-drm2
+    - libva2
+
   neatvnc:
+    after: [ffmpeg]
     plugin: nil
     source: https://github.com/any1/neatvnc.git
     source-depth: 1
@@ -120,6 +165,7 @@ parts:
     plugin: meson
     meson-parameters:
     - -Dscreencopy-dmabuf=enabled
+    - -Dneatvnc:h264=enabled
     stage-packages:
     - libdrm2
     - libgbm1
