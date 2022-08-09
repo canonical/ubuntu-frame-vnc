@@ -60,7 +60,6 @@ parts:
     source-depth: 1
     override-build: |
       ${SNAPCRAFT_PART_BUILD}/build-with-plugs.sh wayland
-      sed -i 's/exec "$@"/exec "$@" --disable-input/' ${SNAPCRAFT_PART_INSTALL}/bin/wayland-launch  # while we don't support input
     stage-packages:
     - inotify-tools
 
