@@ -139,6 +139,7 @@ parts:
     - libxml2-dev
     - wayland-protocols
     stage-packages:
+    - xkb-data
     - libxcb-xkb1
     - libxml2
     plugin: meson
