@@ -63,11 +63,6 @@ parts:
     stage-packages:
     - inotify-tools
 
-  aml:
-    plugin: nil
-    source: https://github.com/any1/aml.git
-    source-depth: 1
-
   ffmpeg:
     source: https://git.ffmpeg.org/ffmpeg.git
     source-tag: n5.0.1
@@ -111,6 +106,12 @@ parts:
     - libva-drm2
     - libva2
 
+  aml:
+    plugin: nil
+    source: https://github.com/any1/aml.git
+    source-git: v0.2.2
+    source-depth: 1
+
   neatvnc:
     after: [ffmpeg]
     plugin: nil
@@ -147,7 +148,7 @@ parts:
     - -Denable-docs=false
 
   wayvnc:
-    after: [aml, neatvnc, xkbcommon]
+    after: [ffmpeg, xkbcommon, aml, neatvnc]
     source: https://github.com/any1/wayvnc.git
     override-pull: |
       snapcraftctl pull
@@ -175,7 +176,7 @@ parts:
     - libwayland-client0
 
   cleanup:
-    after: [neatvnc, wayvnc]
+    after: [aml, ffmpeg, xkbcommon, neatvnc, wayvnc]
     plugin: nil
     build-snaps: [ mesa-core20 ]
     override-prime: |
