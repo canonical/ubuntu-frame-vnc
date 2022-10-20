@@ -1,9 +1,13 @@
 name: ubuntu-frame-vnc
 base: core20
 version: git
-summary: This is a VNC server for Ubuntu Frame
+summary: A VNC server for Ubuntu Frame
 description: |
   This allows for remote access to a running Ubuntu Frame instance.
+
+  Upon install on Ubuntu Core, it will serve VNC on `localhost:5900`.
+
+  See [the Ubuntu Frame documentation](https://mir-server.io/docs/how-to-use-remote-assistance-with-ubuntu-frame) for more information.
 
 grade: stable
 confinement: strict
