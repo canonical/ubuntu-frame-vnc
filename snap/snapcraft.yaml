@@ -1,11 +1,11 @@
 name: ubuntu-frame-vnc
 base: core20
-adopt-info: wayvnc
+version: git
 summary: This is a VNC server for Ubuntu Frame
 description: |
   This allows for remote access to a running Ubuntu Frame instance.
 
-grade: devel
+grade: stable
 confinement: strict
 
 environment:
@@ -37,12 +37,12 @@ apps:
     command-chain:
     - bin/run-daemon
     - bin/wayland-launch
-    command: usr/local/bin/wayvnc
+    command: ubuntu-frame-vnc
 
   ubuntu-frame-vnc:
     command-chain:
     - bin/wayland-launch
-    command: usr/local/bin/wayvnc
+    command: ubuntu-frame-vnc
 
 plugs:
   wayland:
@@ -154,7 +154,6 @@ parts:
     source-tag: v0.5.0
     override-pull: |
       snapcraftctl pull
-      snapcraftctl set-version "$( git describe --tags )"
       mkdir subprojects
       ln -s ../../../aml/src subprojects/aml
       ln -s ../../../neatvnc/src subprojects/neatvnc
@@ -176,6 +175,10 @@ parts:
     - libpam0g
     - libpixman-1-0
     - libwayland-client0
+
+  glue:
+    source: snap/local
+    plugin: dump
 
   cleanup:
     after: [aml, ffmpeg, xkbcommon, neatvnc, wayvnc]

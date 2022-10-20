@@ -1,0 +1,3 @@
+#!/bin/sh
+
+${SNAP}/usr/local/bin/wayvnc --gpu localhost 5900
