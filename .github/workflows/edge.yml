@@ -14,6 +14,9 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v3
+      with:
+        # so that we know what to cherry-pick from
+        fetch-depth: 2
 
     - name: Update `edge`
       env:
@@ -22,6 +25,11 @@ jobs:
         GIT_COMMITTER_NAME: "Mir CI Bot"
         GIT_COMMITTER_EMAIL: "mir-ci-bot@canonical.com"
       run: |
+        # bring any "next" changes in, except for the unpinning
+        git fetch origin edge
+        git cherry-pick HEAD..origin/edge^
+
+        # unpin dependencies
         sed -i 's/^grade: .*/grade: devel/' snap/snapcraft.yaml
         sed -i '/source-tag: /d' snap/snapcraft.yaml
         git add snap/snapcraft.yaml
