@@ -164,6 +164,7 @@ parts:
     build-packages:
     - libdrm-dev
     - libgbm-dev
+    - libjansson-dev
     - libpam0g-dev
     - libpixman-1-dev
     - libwayland-dev
@@ -176,6 +177,7 @@ parts:
     stage-packages:
     - libdrm2
     - libgbm1
+    - libjansson4
     - libpam0g
     - libpixman-1-0
     - libwayland-client0
