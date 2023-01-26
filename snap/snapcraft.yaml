@@ -113,14 +113,14 @@ parts:
   aml:
     plugin: nil
     source: https://github.com/any1/aml.git
-    source-tag: v0.2.2
+    source-tag: v0.3.0
     source-depth: 1
 
   neatvnc:
     after: [ffmpeg]
     plugin: nil
     source: https://github.com/any1/neatvnc.git
-    source-tag: v0.5.4
+    source-tag: v0.6.0
     source-depth: 1
     build-packages:
     - gnutls-dev
@@ -137,7 +137,7 @@ parts:
 
   xkbcommon:
     source: https://github.com/xkbcommon/libxkbcommon.git
-    source-tag: xkbcommon-1.4.1
+    source-tag: xkbcommon-1.5.0
     source-depth: 1
     build-packages:
     - bison
@@ -155,7 +155,7 @@ parts:
   wayvnc:
     after: [ffmpeg, xkbcommon, aml, neatvnc]
     source: https://github.com/any1/wayvnc.git
-    source-tag: v0.5.0
+    source-tag: v0.6.1
     override-pull: |
       snapcraftctl pull
       mkdir subprojects
@@ -164,6 +164,7 @@ parts:
     build-packages:
     - libdrm-dev
     - libgbm-dev
+    - libjansson-dev
     - libpam0g-dev
     - libpixman-1-dev
     - libwayland-dev
@@ -176,6 +177,7 @@ parts:
     stage-packages:
     - libdrm2
     - libgbm1
+    - libjansson4
     - libpam0g
     - libpixman-1-0
     - libwayland-client0
