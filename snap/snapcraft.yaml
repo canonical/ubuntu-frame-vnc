@@ -25,8 +25,6 @@ environment:
 layout:
   /usr/share/icons:
     bind: $SNAP/usr/share/icons
-  /usr/share/libdrm:  # Needed by mesa-core20 on ARM GPUs
-    bind: $SNAP/graphics/libdrm
   /usr/share/drirc.d:
     bind: $SNAP/graphics/drirc.d
 
@@ -100,7 +98,6 @@ parts:
       sed -i 's@includedir=/usr/local/@includedir=${prefix}/@' ${CRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavfilter.pc
       sed -i 's@includedir=/usr/local/@includedir=${prefix}/@' ${CRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavutil.pc
     stage-packages:
-    - libdrm2
     - libx264-163
     - libva-drm2
     - libva2
@@ -124,7 +121,6 @@ parts:
     - libturbojpeg0-dev
     - zlib1g-dev
     stage-packages:
-    - libdrm2
     - libgbm1
     - libgnutls30
     - libturbojpeg
@@ -172,7 +168,6 @@ parts:
     - -Dneatvnc:h264=enabled
     stage-packages:
     - libavcodec58
-    - libdrm2
     - libgbm1
     - libjansson4
     - libpam0g
