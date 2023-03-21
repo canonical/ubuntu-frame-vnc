@@ -26,7 +26,7 @@ layout:
   /usr/share/icons:
     bind: $SNAP/usr/share/icons
   /usr/share/drirc.d:
-    bind: $SNAP/graphics/drirc.d
+    symlink: $SNAP/graphics/drirc.d
 
 apps:
   daemon:
