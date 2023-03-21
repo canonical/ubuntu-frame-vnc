@@ -31,7 +31,7 @@ jobs:
 
         # unpin dependencies
         sed -i 's/^grade: .*/grade: devel/' snap/snapcraft.yaml
-        sed -i '/source-tag: /d' snap/snapcraft.yaml
+        sed -i '/source-\(tag\|depth\): /d' snap/snapcraft.yaml
         git add snap/snapcraft.yaml
         git commit --message "Unpin dependencies"
         git push --force origin HEAD:edge
