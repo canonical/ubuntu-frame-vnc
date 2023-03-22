@@ -1,6 +1,5 @@
 name: ubuntu-frame-vnc
 base: core22
-version: git
 summary: A VNC server for Ubuntu Frame
 description: |
   This allows for remote access to a running Ubuntu Frame instance.
@@ -11,6 +10,7 @@ description: |
 
 grade: stable
 confinement: strict
+adopt-info: wayvnc
 
 environment:
   LD_LIBRARY_PATH:
@@ -167,6 +167,10 @@ parts:
     meson-parameters:
     - -Dscreencopy-dmabuf=enabled
     - -Dneatvnc:h264=enabled
+    override-build: |
+      craftctl default
+      recipe_version=`git -C ${CRAFT_PROJECT_DIR} rev-list --count HEAD`
+      craftctl set version=${recipe_version}-wavnc`git -C ${CRAFT_PART_SRC} describe --tags`
     stage-packages:
     - libavcodec58
     - libgbm1
