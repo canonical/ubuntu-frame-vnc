@@ -175,7 +175,7 @@ parts:
     override-build: |
       craftctl default
       recipe_version=`git -C ${CRAFT_PROJECT_DIR} rev-list --count HEAD`
-      craftctl set version=${recipe_version}-wayvnc`git -C ${CRAFT_PART_SRC} describe --tags`
+      craftctl set version=${recipe_version}-wayvnc$( dpkg-parsechangelog --file $CRAFT_PART_SRC/debian/changelog --show-field Version )
     stage-packages:
     - libavcodec58
     - libgbm1
