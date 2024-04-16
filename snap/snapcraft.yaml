@@ -1,5 +1,5 @@
 name: ubuntu-frame-vnc
-base: core22
+base: core24
 summary: A VNC server for Ubuntu Frame
 description: |
   This allows for remote access to a running Ubuntu Frame instance.
@@ -35,22 +35,22 @@ apps:
     command-chain:
     - bin/run-daemon
     - bin/wayland-launch
-    - bin/graphics-core22-wrapper
+    - bin/graphics-core24-wrapper
     command: bin/ubuntu-frame-vnc
 
   ubuntu-frame-vnc:
     command-chain:
     - bin/wayland-launch
-    - bin/graphics-core22-wrapper
+    - bin/graphics-core24-wrapper
     command: bin/ubuntu-frame-vnc
 
 plugs:
   wayland:
   network-bind:
-  graphics-core22:
+  graphics-core24:
     interface: content
     target: $SNAP/graphics
-    default-provider: mesa-core22
+    default-provider: mesa-core24
   opengl:
 
 parts:
@@ -190,6 +190,6 @@ parts:
     plugin: dump
     override-prime: |
       craftctl default
-      ${CRAFT_PART_SRC}/bin/graphics-core22-cleanup mesa-core22
+      ${CRAFT_PART_SRC}/bin/graphics-core24-cleanup mesa-core24
     prime:
-      - bin/graphics-core22-wrapper
+      - bin/graphics-core24-wrapper
