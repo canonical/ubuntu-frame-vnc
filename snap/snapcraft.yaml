@@ -99,9 +99,7 @@ parts:
       sed -i 's@includedir=/usr/local/@includedir=${prefix}/@' ${CRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavfilter.pc
       sed -i 's@includedir=/usr/local/@includedir=${prefix}/@' ${CRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavutil.pc
     stage-packages:
-    - libx264-163
-    - libva-drm2
-    - libva2
+    - libx264-164
 
   aml:
     plugin: nil
@@ -124,8 +122,7 @@ parts:
     - libturbojpeg0-dev
     - zlib1g-dev
     stage-packages:
-    - libgbm1
-    - libgnutls30
+    - libgnutls30t64
     - libturbojpeg
     - zlib1g
 
@@ -177,12 +174,10 @@ parts:
       recipe_version=`git -C ${CRAFT_PROJECT_DIR} rev-list --count HEAD`
       craftctl set version=${recipe_version}-wayvnc$( dpkg-parsechangelog --file $CRAFT_PART_SRC/debian/changelog --show-field Version )
     stage-packages:
-    - libavcodec58
-    - libgbm1
+    - libavcodec60
     - libjansson4
     - libpam0g
     - libpixman-1-0
-    - libwayland-client0
 
   graphics-core:
     after: [scripts, aml, ffmpeg, xkbcommon, neatvnc, wayvnc]
