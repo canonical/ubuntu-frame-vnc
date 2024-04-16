@@ -184,9 +184,9 @@ parts:
     - libpixman-1-0
     - libwayland-client0
 
-  graphics-core22:
+  graphics-core:
     after: [scripts, aml, ffmpeg, xkbcommon, neatvnc, wayvnc]
-    source: https://github.com/MirServer/graphics-core22.git
+    source: https://github.com/canonical/graphics-core.git
     plugin: dump
     override-prime: |
       craftctl default
