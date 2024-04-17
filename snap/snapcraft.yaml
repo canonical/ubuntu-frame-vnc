@@ -26,7 +26,7 @@ layout:
   /usr/share/icons:
     bind: $SNAP/usr/share/icons
   /usr/share/drirc.d:
-    symlink: $SNAP/graphics/drirc.d
+    symlink: $SNAP/gpu-2404/drirc.d
 
 apps:
   daemon:
@@ -35,22 +35,22 @@ apps:
     command-chain:
     - bin/run-daemon
     - bin/wayland-launch
-    - bin/graphics-core24-wrapper
+    - bin/gpu-2404-wrapper
     command: bin/ubuntu-frame-vnc
 
   ubuntu-frame-vnc:
     command-chain:
     - bin/wayland-launch
-    - bin/graphics-core24-wrapper
+    - bin/gpu-2404-wrapper
     command: bin/ubuntu-frame-vnc
 
 plugs:
   wayland:
   network-bind:
-  graphics-core24:
+  gpu-2404:
     interface: content
-    target: $SNAP/graphics
-    default-provider: mesa-core24
+    target: $SNAP/gpu-2404
+    default-provider: mesa-2404
   opengl:
 
 parts:
@@ -179,12 +179,12 @@ parts:
     - libpam0g
     - libpixman-1-0
 
-  graphics-core:
+  gpu-snap:
     after: [scripts, aml, ffmpeg, xkbcommon, neatvnc, wayvnc]
-    source: https://github.com/canonical/graphics-core.git
+    source: https://github.com/canonical/gpu-snap.git
     plugin: dump
     override-prime: |
       craftctl default
-      ${CRAFT_PART_SRC}/bin/graphics-core24-cleanup mesa-core24
+      ${CRAFT_PART_SRC}/bin/gpu-2404-cleanup mesa-2404
     prime:
-      - bin/graphics-core24-wrapper
+      - bin/gpu-2404-wrapper
