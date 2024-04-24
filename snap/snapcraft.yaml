@@ -66,6 +66,7 @@ parts:
     source-branch: applied/ubuntu/mantic-devel
     source-depth: 1
     build-packages:
+    - execstack
     - libdrm-dev
     - libx264-dev
     - libva-dev
@@ -100,6 +101,11 @@ parts:
       sed -i 's@includedir=/usr/local/@includedir=${prefix}/@' ${CRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavutil.pc
     stage-packages:
     - libx264-164
+    override-stage: |
+      if [ "${CRAFT_ARCH_BUILD_FOR}" != "arm64" ]; then
+          execstack --clear-execstack ${CRAFT_PART_INSTALL}/usr/lib/${CRAFT_ARCH_TRIPLET_BUILD_FOR}/libx264.so.164
+      fi
+      craftctl default
 
   aml:
     plugin: nil
@@ -178,6 +184,8 @@ parts:
     - libjansson4
     - libpam0g
     - libpixman-1-0
+    stage:
+    - -usr/lib/${CRAFT_ARCH_TRIPLET_BUILD_FOR}/libx264.so.164
 
   gpu-snap:
     after: [scripts, aml, ffmpeg, xkbcommon, neatvnc, wayvnc]
