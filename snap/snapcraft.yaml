@@ -91,7 +91,7 @@ parts:
     - --enable-libdrm
     - --enable-vaapi
     override-build: |
-      snapcraftctl build
+      craftctl default
       sed -i 's@libdir=/usr/local/@libdir=${prefix}/@' ${CRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavcodec.pc
       sed -i 's@libdir=/usr/local/@libdir=${prefix}/@' ${CRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavfilter.pc
       sed -i 's@libdir=/usr/local/@libdir=${prefix}/@' ${CRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavutil.pc
@@ -151,7 +151,7 @@ parts:
     source-branch: applied/ubuntu/mantic-devel
     source-depth: 1
     override-pull: |
-      snapcraftctl pull
+      craftctl default
       mkdir subprojects
       ln -s ../../../aml/src subprojects/aml
       ln -s ../../../neatvnc/src subprojects/neatvnc
