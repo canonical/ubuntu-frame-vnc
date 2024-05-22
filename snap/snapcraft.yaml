@@ -63,7 +63,7 @@ parts:
   ffmpeg:
     source:  https://git.launchpad.net/ubuntu/+source/ffmpeg
     source-type: git
-    source-branch: applied/ubuntu/mantic-devel
+    source-branch: applied/ubuntu/noble-devel
     source-depth: 1
     build-packages:
     - execstack
@@ -111,7 +111,7 @@ parts:
     plugin: nil
     source: https://git.launchpad.net/ubuntu/+source/aml
     source-type: git
-    source-branch: applied/ubuntu/mantic-devel
+    source-branch: applied/ubuntu/noble-devel
     source-depth: 1
 
   neatvnc:
@@ -119,7 +119,7 @@ parts:
     plugin: nil
     source: https://git.launchpad.net/ubuntu/+source/neatvnc
     source-type: git
-    source-branch: applied/ubuntu/mantic-devel
+    source-branch: applied/ubuntu/noble-devel
     source-depth: 1
     build-packages:
     - gnutls-dev
@@ -135,7 +135,7 @@ parts:
   xkbcommon:
     source: https://git.launchpad.net/ubuntu/+source/libxkbcommon
     source-type: git
-    source-branch: applied/ubuntu/mantic-devel
+    source-branch: applied/ubuntu/noble-devel
     source-depth: 1
     build-packages:
     - bison
@@ -154,7 +154,7 @@ parts:
     after: [ffmpeg, xkbcommon, aml, neatvnc]
     source: https://git.launchpad.net/ubuntu/+source/wayvnc
     source-type: git
-    source-branch: applied/ubuntu/mantic-devel
+    source-branch: applied/ubuntu/noble-devel
     source-depth: 1
     override-pull: |
       craftctl default
@@ -169,6 +169,7 @@ parts:
     - libpam0g-dev
     - libpixman-1-dev
     - libwayland-dev
+    - libxxhash-dev
     - meson
     - pkg-config
     plugin: meson
