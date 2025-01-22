@@ -1,10 +1,57 @@
 #!/bin/bash
 set -euo pipefail
 
-# (Re)start the daemon
+config_file="$SNAP_DATA/wayvnc.config"
+save_file="$TMPDIR/wayvnc.config.save"
+placeholder="<enabled>"
+
+if [ -f $config_file ]; then
+  trap "rm --force $save_file" EXIT
+  cp --preserve=all $config_file $save_file
+else
+  touch $config_file
+fi
+chmod 600 $config_file
+
+username="$(snapctl get username)"
+password="$(snapctl get password)"
+
+# Ensure that either both username and password are set, or neither
+if [ -n "$username" ] && [ -n "$password" ] && [ "$password" != "$placeholder" ]; then
+  # Avoid leaking the password on 'snap get ubuntu-frame-vnc'
+  snapctl set password="$placeholder"
+  cat > $config_file <<EOF
+enable_auth=true
+username=$username
+password=$password
+EOF
+
+elif [ -n "$username" ] && [ "$password" == "$placeholder" ]; then
+  awk "
+  BEGIN {
+    print \"enable_auth=true\"
+    print \"username=$username\"
+  }
+  /^password=/ { print \$0 }
+  " $save_file > $config_file
+
+elif [ -z "$username" ] && [ -z "$password" ]; then
+  cat > $config_file <<EOF
+enable_auth=false
+EOF
+
+else
+  echo "Both 'username' and 'password' must be set to enable authentication,"
+  echo "or both unset to disable it"
+  exit 1
+fi
+
+# (Re)start the daemon if enabled and ocnfiguration changed
 if [ "$(snapctl get daemon)" = "true" ]; then
-  if snapctl services "$SNAP_INSTANCE_NAME.daemon" | grep -q inactive; then
-    snapctl start --enable "$SNAP_INSTANCE_NAME.daemon" 2>&1 || true
+  snapctl services "$SNAP_INSTANCE_NAME.daemon" | grep -q inactive && active=0 || active=1
+  snapctl start --enable "$SNAP_INSTANCE_NAME.daemon" 2>&1
+  if [ $active -eq 1 ] && ! cmp $config_file $save_file; then
+    snapctl restart "$SNAP_INSTANCE_NAME.daemon" 2>&1
   fi
 else
   snapctl stop --disable "$SNAP_INSTANCE_NAME.daemon" 2>&1 || true
