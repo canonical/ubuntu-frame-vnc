@@ -13,8 +13,27 @@ else
 fi
 chmod 600 $config_file
 
-username="$(snapctl get username)"
-password="$(snapctl get password)"
+sanitized_get() {
+  key=$1
+  value="$(snapctl get "$key")"
+  sanitized="$( echo $value | tr -cd '\000-\177')"
+
+  if [ "$value" != "$sanitized" ]; then
+    echo "Bad \"$key\" value, only printable characters allowed" >&2
+    return 1
+  fi
+
+  if [ "${#value}" -gt 32 ]; then
+    echo "Bad \"$key\" value, maximum 32 characters allowed" >&2
+    return 2
+  fi
+
+  echo "$value"
+  return 0
+}
+
+username="$(sanitized_get username)" || exit 1 2>&1
+password="$(sanitized_get password)" || exit 2 2>&1
 
 # Ensure that either both username and password are set, or neither
 if [ -n "$username" ] && [ -n "$password" ] && [ "$password" != "$placeholder" ]; then
@@ -26,7 +45,7 @@ username=$username
 password=$password
 EOF
 
-elif [ -n "$username" ] && [ "$password" == "$placeholder" ]; then
+elif [ -n "$username" ] && [ "$password" == "$placeholder" ] && grep -q '^password=.\+' $config_file; then
   awk "
   BEGIN {
     print \"enable_auth=true\"
@@ -43,7 +62,7 @@ EOF
 else
   echo "Both 'username' and 'password' must be set to enable authentication,"
   echo "or both unset to disable it"
-  exit 1
+  exit 3
 fi
 
 # (Re)start the daemon if enabled and ocnfiguration changed
