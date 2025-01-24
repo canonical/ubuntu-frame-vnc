@@ -168,7 +168,6 @@ parts:
     - pkg-config
     plugin: meson
     meson-parameters:
-    - -Dneatvnc:tls=disabled
     - -Dscreencopy-dmabuf=enabled
     - -Dneatvnc:h264=enabled
     override-build: |
