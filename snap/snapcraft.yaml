@@ -8,7 +8,7 @@ description: |
 
   See [the Ubuntu Frame documentation](https://mir-server.io/docs/how-to-use-remote-assistance-with-ubuntu-frame) for more information.
 
-grade: stable
+grade: devel
 confinement: strict
 adopt-info: wayvnc
 
@@ -64,7 +64,6 @@ parts:
     source:  https://git.launchpad.net/ubuntu/+source/ffmpeg
     source-type: git
     source-branch: applied/ubuntu/noble-devel
-    source-depth: 1
     build-packages:
     - libdrm-dev
     - libx264-dev
@@ -106,7 +105,6 @@ parts:
     source: https://git.launchpad.net/ubuntu/+source/aml
     source-type: git
     source-branch: applied/ubuntu/noble-devel
-    source-depth: 1
 
   neatvnc:
     after: [ffmpeg]
@@ -114,7 +112,6 @@ parts:
     source: https://git.launchpad.net/ubuntu/+source/neatvnc
     source-type: git
     source-branch: applied/ubuntu/noble-devel
-    source-depth: 1
     build-packages:
     - gnutls-dev
     - libdrm-dev
@@ -130,7 +127,6 @@ parts:
     source: https://git.launchpad.net/ubuntu/+source/libxkbcommon
     source-type: git
     source-branch: applied/ubuntu/noble-devel
-    source-depth: 1
     build-packages:
     - bison
     - libxcb-xkb-dev
@@ -149,7 +145,6 @@ parts:
     source: https://git.launchpad.net/ubuntu/+source/wayvnc
     source-type: git
     source-branch: applied/ubuntu/noble-devel
-    source-depth: 1
     override-pull: |
       craftctl default
       mkdir subprojects
