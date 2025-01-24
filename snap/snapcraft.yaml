@@ -116,11 +116,13 @@ parts:
     source-branch: applied/ubuntu/noble-devel
     source-depth: 1
     build-packages:
+    - gnutls-dev
     - libdrm-dev
     - libgbm-dev
     - libturbojpeg0-dev
     - zlib1g-dev
     stage-packages:
+    - libgnutls30t64
     - libturbojpeg
     - zlib1g
 
@@ -167,7 +169,6 @@ parts:
     plugin: meson
     meson-parameters:
     - -Dneatvnc:tls=disabled
-    - -Dneatvnc:nettle=disabled
     - -Dscreencopy-dmabuf=enabled
     - -Dneatvnc:h264=enabled
     override-build: |
