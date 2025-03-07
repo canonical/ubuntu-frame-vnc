@@ -1,0 +1,7 @@
+#!/bin/sh
+
+CONFIG=${SNAP_USER_DATA}/wayvnc.config
+
+[ -f ${CONFIG} ] || touch ${CONFIG}
+
+exec ${SNAP}/usr/local/bin/wayvnc --config ${CONFIG} --gpu localhost 5900
