@@ -42,7 +42,7 @@ apps:
     command-chain:
     - bin/wayland-launch
     - bin/gpu-2404-wrapper
-    command: bin/ubuntu-frame-vnc
+    command: bin/ubuntu-frame-vnc.user
 
 plugs:
   wayland:
