@@ -60,130 +60,22 @@ parts:
     stage-packages:
     - inotify-tools
 
-  ffmpeg:
-    source:  https://git.launchpad.net/ubuntu/+source/ffmpeg
-    source-type: git
-    source-branch: applied/ubuntu/noble-devel
-    source-depth: 1
-    build-packages:
-    - libdrm-dev
-    - libx264-dev
-    - libva-dev
-    - nasm
-    plugin: autotools
-    autotools-configure-parameters:
-    - --enable-gpl
-    - --disable-programs
-    - --disable-doc
-    - --disable-static
-    - --enable-shared
-    - --disable-avdevice
-    - --disable-avformat
-    - --disable-postproc
-    - --disable-swresample
-    - --disable-swscale
-    - --disable-everything
-    - --disable-iconv
-    - --disable-libxcb
-    - --disable-zlib
-    - --enable-libx264
-    - --enable-encoder=libx264
-    - --enable-libdrm
-    - --enable-vaapi
-    override-build: |
-      craftctl default
-      sed -i 's@libdir=/usr/local/@libdir=${prefix}/@' ${CRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavcodec.pc
-      sed -i 's@libdir=/usr/local/@libdir=${prefix}/@' ${CRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavfilter.pc
-      sed -i 's@libdir=/usr/local/@libdir=${prefix}/@' ${CRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavutil.pc
-      sed -i 's@includedir=/usr/local/@includedir=${prefix}/@' ${CRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavcodec.pc
-      sed -i 's@includedir=/usr/local/@includedir=${prefix}/@' ${CRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavfilter.pc
-      sed -i 's@includedir=/usr/local/@includedir=${prefix}/@' ${CRAFT_PART_INSTALL}/usr/local/lib/pkgconfig/libavutil.pc
-    stage-packages:
-    - libx264-164
-
-  aml:
-    plugin: nil
-    source: https://git.launchpad.net/ubuntu/+source/aml
-    source-type: git
-    source-branch: applied/ubuntu/noble-devel
-    source-depth: 1
-
-  neatvnc:
-    after: [ffmpeg]
-    plugin: nil
-    source: https://git.launchpad.net/ubuntu/+source/neatvnc
-    source-type: git
-    source-branch: applied/ubuntu/noble-devel
-    source-depth: 1
-    build-packages:
-    - gnutls-dev
-    - libdrm-dev
-    - libgbm-dev
-    - libturbojpeg0-dev
-    - zlib1g-dev
-    stage-packages:
-    - libgnutls30t64
-    - libturbojpeg
-    - zlib1g
-
-  xkbcommon:
-    source: https://git.launchpad.net/ubuntu/+source/libxkbcommon
-    source-type: git
-    source-branch: applied/ubuntu/noble-devel
-    source-depth: 1
-    build-packages:
-    - bison
-    - libxcb-xkb-dev
-    - libxml2-dev
-    - wayland-protocols
-    stage-packages:
-    - xkb-data
-    - libxcb-xkb1
-    - libxml2
-    plugin: meson
-    meson-parameters:
-    - -Denable-docs=false
-
   wayvnc:
-    after: [ffmpeg, xkbcommon, aml, neatvnc]
-    source: https://git.launchpad.net/ubuntu/+source/wayvnc
-    source-type: git
-    source-branch: applied/ubuntu/noble-devel
-    source-depth: 1
-    override-pull: |
-      craftctl default
-      mkdir subprojects
-      ln -s ../../../aml/src subprojects/aml
-      ln -s ../../../neatvnc/src subprojects/neatvnc
-    build-packages:
-    - libavcodec-dev
-    - libdrm-dev
-    - libgbm-dev
-    - libjansson-dev
-    - libpam0g-dev
-    - libpixman-1-dev
-    - libwayland-dev
-    - libxxhash-dev
-    - meson
-    - pkg-config
-    plugin: meson
-    meson-parameters:
-    - -Dscreencopy-dmabuf=enabled
-    - -Dneatvnc:h264=enabled
-    override-build: |
-      craftctl default
-      recipe_version=`git -C ${CRAFT_PROJECT_DIR} rev-list --count HEAD`
-      craftctl set version=${recipe_version}-wayvnc$( dpkg-parsechangelog --file $CRAFT_PART_SRC/debian/changelog --show-field Version )
+    plugin: nil
     stage-packages:
     - libavcodec60
     - libjansson4
     - libpam0g
     - libpixman-1-0
-    stage:
-    - -usr/lib/${CRAFT_ARCH_TRIPLET_BUILD_FOR}/libx264.so.164
+    - libx264-164
+    - wayvnc
+    override-stage: |
+      craftctl default
+      recipe_version=`git -C ${CRAFT_PROJECT_DIR} rev-list --count HEAD`
+      craftctl set version=${recipe_version}-wayvnc$( dpkg-parsechangelog --file ${CRAFT_PART_INSTALL}/usr/share/doc/wayvnc/changelog* --show-field Version )
 
   gpu-snap:
-    after: [scripts, aml, ffmpeg, xkbcommon, neatvnc, wayvnc]
+    after: [scripts, wayvnc]
     source: https://github.com/canonical/gpu-snap.git
     plugin: dump
     override-prime: |
