@@ -122,11 +122,13 @@ parts:
     - libdrm-dev
     - libgbm-dev
     - libturbojpeg0-dev
+    - libxxhash-dev
     - zlib1g-dev
     stage-packages:
     - libgbm1
     - libgnutls30
     - libturbojpeg
+    - libxxhash0
     - zlib1g
 
   xkbcommon:
