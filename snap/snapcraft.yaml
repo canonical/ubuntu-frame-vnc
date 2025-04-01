@@ -63,7 +63,7 @@ parts:
   ffmpeg:
     source:  https://git.launchpad.net/ubuntu/+source/ffmpeg
     source-type: git
-    source-branch: applied/ubuntu/mantic-devel
+    source-branch: applied/ubuntu/noble-updates
     source-depth: 1
     build-packages:
     - libdrm-dev
@@ -107,7 +107,7 @@ parts:
     plugin: nil
     source: https://git.launchpad.net/ubuntu/+source/aml
     source-type: git
-    source-branch: applied/ubuntu/mantic-devel
+    source-branch: applied/ubuntu/noble-updates
     source-depth: 1
 
   neatvnc:
@@ -115,24 +115,26 @@ parts:
     plugin: nil
     source: https://git.launchpad.net/ubuntu/+source/neatvnc
     source-type: git
-    source-branch: applied/ubuntu/mantic-devel
+    source-branch: applied/ubuntu/noble-updates
     source-depth: 1
     build-packages:
     - gnutls-dev
     - libdrm-dev
     - libgbm-dev
     - libturbojpeg0-dev
+    - libxxhash-dev
     - zlib1g-dev
     stage-packages:
     - libgbm1
     - libgnutls30
     - libturbojpeg
+    - libxxhash0
     - zlib1g
 
   xkbcommon:
     source: https://git.launchpad.net/ubuntu/+source/libxkbcommon
     source-type: git
-    source-branch: applied/ubuntu/mantic-devel
+    source-branch: applied/ubuntu/noble
     source-depth: 1
     build-packages:
     - bison
@@ -151,7 +153,7 @@ parts:
     after: [ffmpeg, xkbcommon, aml, neatvnc]
     source: https://git.launchpad.net/ubuntu/+source/wayvnc
     source-type: git
-    source-branch: applied/ubuntu/mantic-devel
+    source-branch: applied/ubuntu/noble-updates
     source-depth: 1
     override-pull: |
       snapcraftctl pull
