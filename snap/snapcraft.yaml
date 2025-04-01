@@ -132,7 +132,7 @@ parts:
   xkbcommon:
     source: https://git.launchpad.net/ubuntu/+source/libxkbcommon
     source-type: git
-    source-branch: applied/ubuntu/noble-updates
+    source-branch: applied/ubuntu/noble
     source-depth: 1
     build-packages:
     - bison
