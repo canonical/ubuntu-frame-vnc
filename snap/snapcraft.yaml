@@ -37,21 +37,23 @@ apps:
     - bin/wayland-launch
     - bin/gpu-2404-wrapper
     command: bin/ubuntu-frame-vnc
+    plugs: &plugs
+    - wayland
+    - network-bind
+    - opengl
 
   ubuntu-frame-vnc:
     command-chain:
     - bin/wayland-launch
     - bin/gpu-2404-wrapper
     command: bin/ubuntu-frame-vnc.user
+    plugs: *plugs
 
 plugs:
-  wayland:
-  network-bind:
   gpu-2404:
     interface: content
     target: $SNAP/gpu-2404
     default-provider: mesa-2404
-  opengl:
 
 parts:
   scripts:
