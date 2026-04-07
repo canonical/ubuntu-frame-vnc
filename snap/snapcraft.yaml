@@ -15,11 +15,11 @@ adopt-info: wayvnc
 environment:
   LD_LIBRARY_PATH:
     "${SNAP}/usr/local/lib\
-     :${SNAP}/usr/local/lib/${CRAFT_ARCH_TRIPLET}\
+     :${SNAP}/usr/local/lib/${CRAFT_ARCH_TRIPLET_BUILD_FOR}\
      :${SNAP_LIBRARY_PATH}\
-     :${SNAP}/usr/lib/${CRAFT_ARCH_TRIPLET}\
-     :${SNAP}/usr/lib/${CRAFT_ARCH_TRIPLET}/blas\
-     :${SNAP}/usr/lib/${CRAFT_ARCH_TRIPLET}/lapack"
+     :${SNAP}/usr/lib/${CRAFT_ARCH_TRIPLET_BUILD_FOR}\
+     :${SNAP}/usr/lib/${CRAFT_ARCH_TRIPLET_BUILD_FOR}/blas\
+     :${SNAP}/usr/lib/${CRAFT_ARCH_TRIPLET_BUILD_FOR}/lapack"
   XKB_CONFIG_ROOT: ${SNAP}/usr/share/X11/xkb
 
 layout:
