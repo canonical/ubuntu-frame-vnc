@@ -19,7 +19,7 @@ environment:
      :${SNAP_LIBRARY_PATH}\
      :${SNAP}/usr/lib/${CRAFT_ARCH_TRIPLET_BUILD_FOR}/blas\
      :${SNAP}/usr/lib/${CRAFT_ARCH_TRIPLET_BUILD_FOR}/lapack"
-  XKB_CONFIG_ROOT: ${SNAP}/usr/share/X11/xkb
+  XKB_CONFIG_ROOT: ${SNAP}/usr/share/xkeyboard-config-2
 
 layout:
   /usr/share/icons:
@@ -71,6 +71,7 @@ parts:
       )-snap$( git -C $CRAFT_PROJECT_DIR rev-list --count HEAD )
     stage-packages:
     - wayvnc
+    - xkb-data
 
   gpu-snap:
     after: [scripts, wayvnc]
